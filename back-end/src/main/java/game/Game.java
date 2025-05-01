@@ -31,6 +31,21 @@ public class Game {
         this.player = nextPlayer;
         this.history = history;
     }
+    public Game undo() {
+        if (history.isEmpty()) return this;
+        return history.get(history.size() - 1);
+    }
+
+    public boolean isDraw() {
+    if (getWinner() != null) return false;
+    for (int x = 0; x < 3; x++)
+        for (int y = 0; y < 3; y++)
+            if (board.getCell(x, y) == null)
+                return false;
+    return true;
+}
+
+    
 
     public Board getBoard() {
         return this.board;
@@ -38,6 +53,9 @@ public class Game {
 
     public Player getPlayer() {
         return this.player;
+    }
+    public Player getCurrentPlayer() {
+        return player;
     }
 
     public Game play(int x, int y) {

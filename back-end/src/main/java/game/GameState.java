@@ -5,33 +5,57 @@ import java.util.Arrays;
 public class GameState {
 
     private final Cell[] cells;
+    private final String currentPlayer;
+    private final String winner;
+    private final boolean draw; 
 
-    private GameState(Cell[] cells) {
+    private GameState(Cell[] cells, String currentPlayer, String winner, boolean draw) {
         this.cells = cells;
+        this.currentPlayer = currentPlayer;
+        this.winner = winner;
+        this.draw = draw;
     }
 
     public static GameState forGame(Game game) {
         Cell[] cells = getCells(game);
-        return new GameState(cells);
+        String current = game.getCurrentPlayer() == Player.PLAYER0 ? "X" : "O";
+        String win = game.getWinner() == null ? "" :
+                     game.getWinner() == Player.PLAYER0 ? "X" : "O";
+        boolean draw = game.isDraw();
+        System.out.println("DRAW STATUS: " + draw);
+        return new GameState(cells, current, win, draw);
     }
 
     public Cell[] getCells() {
         return this.cells;
     }
 
-    /**
-     * toString() of GameState will return the string representing
-     * the GameState in JSON format.
-     */
+    public String getCurrentPlayer() {
+        return this.currentPlayer;
+    }
+
+    public String getWinner() {
+        return this.winner;
+    }
+
+    public boolean getDraw() {
+        return this.draw;
+    }
+
     @Override
     public String toString() {
         return """
-                { "cells": %s}
-                """.formatted(Arrays.toString(this.cells));
+            {
+              "cells": %s,
+              "currentPlayer": "%s",
+              "winner": "%s",
+              "draw": %b
+            }
+            """.formatted(Arrays.toString(this.cells), this.currentPlayer, this.winner, this.draw);
     }
 
     private static Cell[] getCells(Game game) {
-        Cell cells[] = new Cell[9];
+        Cell[] cells = new Cell[9];
         Board board = game.getBoard();
         for (int x = 0; x <= 2; x++) {
             for (int y = 0; y <= 2; y++) {
@@ -49,47 +73,5 @@ public class GameState {
             }
         }
         return cells;
-    }
-}
-
-class Cell {
-    private final int x;
-    private final int y;
-    private final String text;
-    private final boolean playable;
-
-    Cell(int x, int y, String text, boolean playable) {
-        this.x = x;
-        this.y = y;
-        this.text = text;
-        this.playable = playable;
-    }
-
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
-    public String getText() {
-        return this.text;
-    }
-
-    public boolean isPlayable() {
-        return this.playable;
-    }
-
-    @Override
-    public String toString() {
-        return """
-                {
-                    "text": "%s",
-                    "playable": %b,
-                    "x": %d,
-                    "y": %d 
-                }
-                """.formatted(this.text, this.playable, this.x, this.y);
     }
 }
