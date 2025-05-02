@@ -36,7 +36,7 @@ public class TicTacToeServer extends NanoHTTPD {
         GameState state = GameState.forGame(game);
 
         try {
-            ObjectMapper mapper = new ObjectMapper(); // ✅ JSON сериализатор
+            ObjectMapper mapper = new ObjectMapper(); 
             String json = mapper.writeValueAsString(state);
 
             return NanoHTTPD.newFixedLengthResponse(
